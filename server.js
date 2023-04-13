@@ -19,6 +19,23 @@ app.listen(port, function (err) {
 
 Cuisines = []
 Restaurant = []
+Orders = {}
+
+const CuisineTracking = {
+    cuisineType : "",
+    noOfOrders : 0
+}
+
+const CostTracking = {
+	costBracket : 0,
+	noOfOrders : 0
+}
+
+const User = {
+	cuisines : {},
+	costBracket : {}
+}
+
 
 app.get("/cuisines/", function(req, res) {
     res.end( JSON.stringify(Cuisines))
@@ -52,4 +69,15 @@ app.post("/restaurants/", function(req, res) {
     //console.log(date.format(now,'DD/MM/YYYY'))
     Restaurant = [...Restaurant, data]
     res.end( JSON.stringify(Restaurant))
+})
+
+app.post("/orders/", function(req, res) {
+    console.log(req.body);
+    const {userId, CuisineType, Costbracket} = req.body
+    console.log(userId, CuisineType, Costbracket)
+    if(!(userId in Orders)) {
+        Orders[userId] = []
+    }
+    Orders[userId].push(req.body)
+    res.end( JSON.stringify(Orders))
 })
