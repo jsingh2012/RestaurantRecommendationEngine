@@ -2,6 +2,7 @@
 // server.js File
 const express = require('express'); // Importing express module
 const date = require('date-and-time')
+const {Cuisines, getCuisines, postCuisines} = require("./cuisine");
 const app = express(); // Creating an express object
 app.use(express.json());
 const port = 8100;  // Setting an port for this application
@@ -17,7 +18,7 @@ app.listen(port, function (err) {
    }
 })
 
-Cuisines = []
+
 Restaurant = []
 Orders = {}
 Users = {}
@@ -38,24 +39,8 @@ const User = {
 }
 
 
-app.get("/cuisines/", function(req, res) {
-    res.send( JSON.stringify(Cuisines))
-})
-
-app.post("/cuisines/", function(req, res) {
-    // console.log(req.body);
-    const {data: newCuisines} = req.body
-    // console.log(newCuisines);
-    listOfnewCuisines = newCuisines.split(",")
-    listOfnewCuisines.forEach(element => {
-        element = element.trim()
-        if(!Cuisines.includes(element)) {
-            Cuisines = [...Cuisines, element]
-        }
-    })
-    
-    res.send( JSON.stringify(Cuisines))
-})
+app.get("/cuisines/", getCuisines)
+app.post("/cuisines/", postCuisines)
 
 app.get("/restaurants/", function(req, res) {
     res.send( JSON.stringify(Restaurant))
@@ -76,10 +61,11 @@ app.post("/orders/", function(req, res) {
     console.log(req.body);
     const {userId, cuisineType, costbracket} = req.body
     console.log(userId, cuisineType, costbracket)
-    if(!(userId in Orders)) {
-        Orders[userId] = []
-    }
-    Orders[userId].push(req.body)
+    
+    // if(!(userId in Orders)) {
+    //     Orders[userId] = []
+    // }
+    // Orders[userId].push(req.body)
 
     if(!(userId in Users)) {
         Users[userId] = User
