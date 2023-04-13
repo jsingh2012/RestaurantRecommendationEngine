@@ -22,15 +22,15 @@ Restaurant = []
 Orders = {}
 Users = {}
 
-const CuisineTracking = {
-    cuisineType : "",
-    noOfOrders : 0
-}
+// const CuisineTracking = {
+//     cuisineType : "",
+//     noOfOrders : 0
+// }
 
-const CostTracking = {
-	costBracket : 0,
-	noOfOrders : 0
-}
+// const CostTracking = {
+// 	costBracket : 0,
+// 	noOfOrders : 0
+// }
 
 const User = {
 	cuisines : {},
@@ -39,7 +39,7 @@ const User = {
 
 
 app.get("/cuisines/", function(req, res) {
-    res.end( JSON.stringify(Cuisines))
+    res.send( JSON.stringify(Cuisines))
 })
 
 app.post("/cuisines/", function(req, res) {
@@ -54,11 +54,11 @@ app.post("/cuisines/", function(req, res) {
         }
     })
     
-    res.end( JSON.stringify(Cuisines))
+    res.send( JSON.stringify(Cuisines))
 })
 
 app.get("/restaurants/", function(req, res) {
-    res.end( JSON.stringify(Restaurant))
+    res.send( JSON.stringify(Restaurant))
 })
 
 app.post("/restaurants/", function(req, res) {
@@ -69,7 +69,7 @@ app.post("/restaurants/", function(req, res) {
     //const now  =  new Date();
     //console.log(date.format(now,'DD/MM/YYYY'))
     Restaurant = [...Restaurant, data]
-    res.end( JSON.stringify(Restaurant))
+    res.send( JSON.stringify(Restaurant))
 })
 
 app.post("/orders/", function(req, res) {
@@ -93,5 +93,15 @@ app.post("/orders/", function(req, res) {
     }
     Users[userId].costBracket[costbracket]++
     
-    res.end( JSON.stringify(Users))
+    res.send( JSON.stringify(Users))
+})
+
+app.get("/userOrder/", function(req, res) {
+    const id = req.query.id
+    console.log("userOrder ", id);
+    if(id in Users) {
+        res.send( JSON.stringify(Users[id]))
+    } else {
+        res.send( JSON.stringify({"data": "User not Found"}))
+    }
 })
