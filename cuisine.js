@@ -19,4 +19,4 @@ const postCuisines =  (req, res) => {
      res.send( JSON.stringify(Cuisines))
 };
 
-module.exports = { Cuisines, getCuisines, postCuisines};
+module.exports = {getCuisines, postCuisines};

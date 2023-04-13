@@ -2,7 +2,8 @@
 // server.js File
 const express = require('express'); // Importing express module
 const date = require('date-and-time')
-const {Cuisines, getCuisines, postCuisines} = require("./cuisine");
+const {getCuisines, postCuisines} = require("./cuisine");
+const {postRestaurants, getRestaurants} = require("./restaurants")
 const app = express(); // Creating an express object
 app.use(express.json());
 const port = 8100;  // Setting an port for this application
@@ -18,8 +19,6 @@ app.listen(port, function (err) {
    }
 })
 
-
-Restaurant = []
 Orders = {}
 Users = {}
 
@@ -42,20 +41,8 @@ const User = {
 app.get("/cuisines/", getCuisines)
 app.post("/cuisines/", postCuisines)
 
-app.get("/restaurants/", function(req, res) {
-    res.send( JSON.stringify(Restaurant))
-})
-
-app.post("/restaurants/", function(req, res) {
-    //console.log(req.body);
-    //req.body.id = length(Restaurant)+1
-    data = {...req.body, id:Restaurant.length+1 }
-    //console.log(data);
-    //const now  =  new Date();
-    //console.log(date.format(now,'DD/MM/YYYY'))
-    Restaurant = [...Restaurant, data]
-    res.send( JSON.stringify(Restaurant))
-})
+app.get("/restaurants/", getRestaurants)
+app.post("/restaurants/", postRestaurants)
 
 app.post("/orders/", function(req, res) {
     console.log(req.body);
