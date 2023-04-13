@@ -20,6 +20,7 @@ app.listen(port, function (err) {
 Cuisines = []
 Restaurant = []
 Orders = {}
+Users = {}
 
 const CuisineTracking = {
     cuisineType : "",
@@ -73,11 +74,24 @@ app.post("/restaurants/", function(req, res) {
 
 app.post("/orders/", function(req, res) {
     console.log(req.body);
-    const {userId, CuisineType, Costbracket} = req.body
-    console.log(userId, CuisineType, Costbracket)
+    const {userId, cuisineType, costbracket} = req.body
+    console.log(userId, cuisineType, costbracket)
     if(!(userId in Orders)) {
         Orders[userId] = []
     }
     Orders[userId].push(req.body)
-    res.end( JSON.stringify(Orders))
+
+    if(!(userId in Users)) {
+        Users[userId] = User
+    }
+    if(! (cuisineType in Users[userId].cuisines )) {
+        Users[userId].cuisines[cuisineType] = 0
+    }
+    Users[userId].cuisines[cuisineType]++
+    if(! (costbracket in Users[userId].costBracket )) {
+        Users[userId].costBracket[costbracket] = 0
+    }
+    Users[userId].costBracket[costbracket]++
+    
+    res.end( JSON.stringify(Users))
 })
