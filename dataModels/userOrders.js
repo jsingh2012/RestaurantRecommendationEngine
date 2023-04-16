@@ -47,7 +47,7 @@ const getPrimaryAndSecondaryCousineForUser = (userId) => {
         return result
 
     } else {
-        res.send( JSON.stringify({"data": "User not Found"}))
+        return result
     }
 }
 
@@ -70,7 +70,7 @@ const getPrimaryAndSecondaryCategoryForUser = (userId) => {
         return result
 
     } else {
-        res.send( JSON.stringify({"data": "User not Found"}))
+        return result
     }
 }
 
@@ -101,4 +101,4 @@ const postUsersOrders =  (req, res) => {
 
 
 
-module.exports = {postUsersOrders, getUsersOrders}
+module.exports = {postUsersOrders, getUsersOrders, getPrimaryAndSecondaryCousineForUser, getPrimaryAndSecondaryCategoryForUser}

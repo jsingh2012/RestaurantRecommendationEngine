@@ -4,7 +4,10 @@ const express = require('express'); // Importing express module
 const date = require('date-and-time')
 const {getCuisines, postCuisines} = require("./dataModels/cuisine");
 const {postRestaurants, getRestaurants} = require("./dataModels/restaurants")
-const {postUsersOrders, getUsersOrders} = require("./dataModels/userOrders")
+const {postUsersOrders, 
+    getUsersOrders, 
+    getPrimaryAndSecondaryCategoryForUser, 
+    getPrimaryAndSecondaryCousineForUser} = require("./dataModels/userOrders")
 const app = express(); // Creating an express object
 app.use(express.json());
 const port = 8100;  // Setting an port for this application
@@ -36,5 +39,7 @@ app.get("/userOrder/", getUsersOrders)
 //Restaurants == 0 Means all
 app.get("/RestaurantRecommendations/", function(req, res) {
     console.log(req.query.userId, req.query.Restaurants);
-    res.send( JSON.stringify({"data": "User not Found"}))
+    cost = getPrimaryAndSecondaryCategoryForUser(req.query.userId)
+    cuisine = getPrimaryAndSecondaryCousineForUser(req.query.userId)
+    res.send( JSON.stringify({"data": {cost: cost, cuisine: cuisine }}))
 } ) 
