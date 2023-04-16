@@ -34,16 +34,18 @@ If none, then all featured restaurants of primary cuisine, secondary
 cost and secondary cuisine, primary cost
 */
 
-const FeaturedRestaurantsForCuisineAndBracket = (userCuisine, costBracket, excludList) => {
-    console.log("FeaturedRestaurantsForCuisineAndBracket ", userCuisine, costBracket, excludList)
+const FeaturedRestaurantsForCuisineAndBracket = (userCuisine, costBracket, selectedListId) => {
+    console.log("FeaturedRestaurantsForCuisineAndBracket ", userCuisine, costBracket, selectedListId)
     list = []
     Restaurants.forEach(restaurant => {
         console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)  
-        if(restaurant.isRecommended && restaurant.cuisine === userCuisine["primary"].cuisine && parseInt(restaurant.costBracket) === parseInt(costBracket["primary"].costBracket)) {
-            if(!excludList.includes( restaurant.restaurantId)) {
+        if(restaurant.isRecommended && restaurant.cuisine === userCuisine["primary"].cuisine 
+            && parseInt(restaurant.costBracket) === parseInt(costBracket["primary"].costBracket)) {
+            if(!selectedListId.includes( restaurant.restaurantId)) {
                 list = [...list, restaurant]
+                selectedListId = [...selectedListId, restaurant.restaurantId]
             } else {
-                console.log("restaurant.restaurantId included in excludList ", excludList)
+                console.log("restaurant.restaurantId included in selectedListId ", selectedListId)
             }
        }
     });
@@ -53,18 +55,45 @@ const FeaturedRestaurantsForCuisineAndBracket = (userCuisine, costBracket, exclu
             console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)  
             if(restaurant.isRecommended 
                 && (restaurant.cuisine === userCuisine["primary"].cuisine 
-                && (parseInt(restaurant.costBracket) === parseInt(costBracket["secondary"][0].costBracket) 
-                    ||  parseInt(restaurant.costBracket) === parseInt(costBracket["secondary"][1].costBracket) ))) {
+                && (parseInt(restaurant.costBracket) === parseInt(costBracket["secondary"][0]?.costBracket) 
+                    ||  parseInt(restaurant.costBracket) === parseInt(costBracket["secondary"][1]?.costBracket) ))) {
                 
-                    if(!excludList.includes( restaurant.restaurantId)) {
+                    if(!selectedListId.includes( restaurant.restaurantId)) {
                         list = [...list, restaurant]
+                        selectedListId = [...selectedListId, restaurant.restaurantId]
                     } else {
-                        console.log("restaurant.restaurantId included in excludList ", excludList)
+                        console.log("restaurant.restaurantId included in selectedListId ", selectedListId)
                     }
            }
         });
     }
-    return list
+    return {list : list, selectedListId:selectedListId}
+}
+/*
+All restaurants of Primary cuisine, primary cost bracket with rating >= 4
+All restaurants of Primary cuisine, secondary cost bracket with rating >= 4.5
+All restaurants of secondary cuisine, primary cost bracket with rating >= 4.5
+
+*/
+const RestaurantsForCuisineAndBracketWithMinRating = (userCuisine, costBracket, minRating, selectedListId) => {
+    console.log("RestaurantsForCuisineAndBracketWithMinRating ", userCuisine, costBracket, minRating, selectedListId)
+    list = []
+    Restaurants.forEach(restaurant => {
+        console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)  
+        if( restaurant.cuisine === userCuisine.cuisine 
+            && parseInt(restaurant.costBracket) === parseInt(costBracket.costBracket)
+            && restaurant.rating >= minRating) {
+            if(!selectedListId.includes( restaurant.restaurantId)) {
+                list = [...list, restaurant]
+                selectedListId = [...selectedListId, restaurant.restaurantId]
+            } else {
+                console.log("restaurant.restaurantId included in selectedListId ", selectedListId)
+            }
+       }
+    });
+    console.log("RestaurantsForCuisineAndBracketWithMinRating ", {list2 : list, selectedListId2:selectedListId})
+   
+    return {list2 : list, selectedListId2:selectedListId}
 }
 
 const listOfRestaurants = () => {
@@ -73,4 +102,4 @@ const listOfRestaurants = () => {
         
     });
 }
-module.exports = { getRestaurants, postRestaurants, FeaturedRestaurantsForCuisineAndBracket};
+module.exports = { getRestaurants, postRestaurants, FeaturedRestaurantsForCuisineAndBracket, RestaurantsForCuisineAndBracketWithMinRating};

@@ -4,7 +4,8 @@ const express = require('express'); // Importing express module
 const date = require('date-and-time')
 const {getCuisines, postCuisines} = require("./dataModels/cuisine");
 const {postRestaurants, getRestaurants, 
-    FeaturedRestaurantsForCuisineAndBracket} = require("./dataModels/restaurants")
+    FeaturedRestaurantsForCuisineAndBracket,
+    RestaurantsForCuisineAndBracketWithMinRating} = require("./dataModels/restaurants")
 const {postUsersOrders, 
     getUsersOrders, 
     getPrimaryAndSecondaryCategoryForUser, 
@@ -42,6 +43,36 @@ app.get("/RestaurantRecommendations/", function(req, res) {
     console.log(req.query.userId, req.query.Restaurants);
     cost = getPrimaryAndSecondaryCategoryForUser(req.query.userId)
     cuisine = getPrimaryAndSecondaryCousineForUser(req.query.userId)
-    list1 = FeaturedRestaurantsForCuisineAndBracket(cuisine, cost, [])
-    res.send( JSON.stringify({"data": {Restaurants: list1, cost: cost, cuisine: cuisine }}))
+    let {list, selectedListId} = FeaturedRestaurantsForCuisineAndBracket(cuisine, cost, [])
+    console.log(list, selectedListId)
+    let {list2, selectedListId2} = RestaurantsForCuisineAndBracketWithMinRating(cuisine["primary"], cost["primary"], 4.0, selectedListId)
+    console.log(list2, selectedListId2)
+    list = [...list, ...list2]
+    if(cost["secondary"] && cost["secondary"][0]) {
+        list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMinRating(cuisine["primary"], cost["secondary"][0], 4.5, selectedListId)
+        console.log(list2, selectedListId2)
+        list = [...list, ...list2]
+    }
+
+    if(cost["secondary"] && cost["secondary"][1])  {
+        list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMinRating(cuisine["primary"], cost["secondary"][1], 4.5, selectedListId)
+        console.log(list2, selectedListId2)
+        list = [...list, ...list2]
+    }
+    if(cuisine["secondary"] && cuisine["secondary"][0]) {
+        list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMinRating(cuisine["secondary"][0], cost["primary"], 4.5, selectedListId)
+        console.log(list2, selectedListId2)
+        list = [...list, ...list2]
+    }
+
+    if(cuisine["secondary"] && cuisine["secondary"][1]) {
+        list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMinRating(cuisine["secondary"][1], cost["primary"], 4.5, selectedListId)
+        console.log(list2, selectedListId2)
+        list = [...list, ...list2]
+    }
+
+    selectedListId = [...selectedListId, ...selectedListId2]
+    console.log("selectedListId ", selectedListId, "list ", list)
+    
+    res.send( JSON.stringify({"Restaurants": list}))
 } ) 
