@@ -19,8 +19,9 @@ const getUsersOrders = (req, res) => {
     const id = req.query.id
     console.log("userOrder ", id);
     if(id in UsersOrders) {
-        result = getPrimaryAndSecondaryCousineForUser(id)
-        res.send( JSON.stringify({id: UsersOrders[id], result: result}))
+        cousine = getPrimaryAndSecondaryCousineForUser(id)
+        costBracket= getPrimaryAndSecondaryCategoryForUser(id)
+        res.send( JSON.stringify({id: UsersOrders[id], cousine: cousine, costBracket: costBracket }))
     } else {
         res.send( JSON.stringify({"data": "User not Found"}))
     }
@@ -36,9 +37,9 @@ const getPrimaryAndSecondaryCousineForUser = (userId) => {
     if(userId in UsersOrders) {
         //Add data to heap
         for (var key in  UsersOrders[userId].cuisines) {
-            console.log(key);
-            cousineheap.push({cousine: key, count: UsersOrders[userId].cuisines[key] })
-            console.log(cousineheap)
+            //console.log(key);
+            cousineheap.push({cost: key, count: UsersOrders[userId].cuisines[key] })
+            //console.log(cousineheap)
         }
         result["primary"]  = cousineheap.pop()
         result["seconary"] = [cousineheap.pop(), cousineheap.pop()]
@@ -51,7 +52,26 @@ const getPrimaryAndSecondaryCousineForUser = (userId) => {
 }
 
 const getPrimaryAndSecondaryCategoryForUser = (userId) => {
+     //MAX heap
+     costBracketheap = new Heap(function(a, b) {
+        return b.count - a.count;
+    })
+    //console.log(" userId ", userId, " UsersOrders[userId].cuisines ", UsersOrders[userId].cuisines)
+    result = {}
+    if(userId in UsersOrders) {
+        //Add data to heap
+        for (var key in  UsersOrders[userId].costBracket) {
+            //console.log(key);
+            costBracketheap.push({costBracket: key, count: UsersOrders[userId].costBracket[key] })
+        }
+        result["primary"]  = costBracketheap.pop()
+        result["seconary"] = [costBracketheap.pop(), costBracketheap.pop()]
+        //console.log(result)
+        return result
 
+    } else {
+        res.send( JSON.stringify({"data": "User not Found"}))
+    }
 }
 
 const postUsersOrders =  (req, res) => {
