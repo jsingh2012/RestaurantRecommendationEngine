@@ -3,7 +3,8 @@
 const express = require('express'); // Importing express module
 const date = require('date-and-time')
 const {getCuisines, postCuisines} = require("./dataModels/cuisine");
-const {postRestaurants, getRestaurants} = require("./dataModels/restaurants")
+const {postRestaurants, getRestaurants, 
+    FeaturedRestaurantsForCuisineAndBracket} = require("./dataModels/restaurants")
 const {postUsersOrders, 
     getUsersOrders, 
     getPrimaryAndSecondaryCategoryForUser, 
@@ -41,5 +42,6 @@ app.get("/RestaurantRecommendations/", function(req, res) {
     console.log(req.query.userId, req.query.Restaurants);
     cost = getPrimaryAndSecondaryCategoryForUser(req.query.userId)
     cuisine = getPrimaryAndSecondaryCousineForUser(req.query.userId)
-    res.send( JSON.stringify({"data": {cost: cost, cuisine: cuisine }}))
+    list1 = FeaturedRestaurantsForCuisineAndBracket(cuisine["primary"], cost["primary"])
+    res.send( JSON.stringify({"data": {Restaurants: list1, cost: cost, cuisine: cuisine }}))
 } ) 

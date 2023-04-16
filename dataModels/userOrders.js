@@ -38,7 +38,7 @@ const getPrimaryAndSecondaryCousineForUser = (userId) => {
         //Add data to heap
         for (var key in  UsersOrders[userId].cuisines) {
             //console.log(key);
-            cousineheap.push({cost: key, count: UsersOrders[userId].cuisines[key] })
+            cousineheap.push({cuisine: key, count: UsersOrders[userId].cuisines[key] })
             //console.log(cousineheap)
         }
         result["primary"]  = cousineheap.pop()
