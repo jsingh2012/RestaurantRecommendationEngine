@@ -34,16 +34,36 @@ If none, then all featured restaurants of primary cuisine, secondary
 cost and secondary cuisine, primary cost
 */
 
-const FeaturedRestaurantsForCuisineAndBracket = (userCuisine, costBracket ) => {
-    console.log("FeaturedRestaurantsForCuisineAndBracket ", userCuisine, costBracket)
+const FeaturedRestaurantsForCuisineAndBracket = (userCuisine, costBracket, excludList) => {
+    console.log("FeaturedRestaurantsForCuisineAndBracket ", userCuisine, costBracket, excludList)
     list = []
     Restaurants.forEach(restaurant => {
-        console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)
-       if(restaurant.cuisine === userCuisine.cuisine && parseInt(restaurant.costBracket) === parseInt(costBracket.costBracket)) {
-        list = [...list, restaurant]
+        console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)  
+        if(restaurant.isRecommended && restaurant.cuisine === userCuisine["primary"].cuisine && parseInt(restaurant.costBracket) === parseInt(costBracket["primary"].costBracket)) {
+            if(!excludList.includes( restaurant.restaurantId)) {
+                list = [...list, restaurant]
+            } else {
+                console.log("restaurant.restaurantId included in excludList ", excludList)
+            }
        }
     });
     console.log("list ", list)
+    if(list.length == 0) {
+        Restaurants.forEach(restaurant => {
+            console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)  
+            if(restaurant.isRecommended 
+                && (restaurant.cuisine === userCuisine["primary"].cuisine 
+                && (parseInt(restaurant.costBracket) === parseInt(costBracket["secondary"][0].costBracket) 
+                    ||  parseInt(restaurant.costBracket) === parseInt(costBracket["secondary"][1].costBracket) ))) {
+                
+                    if(!excludList.includes( restaurant.restaurantId)) {
+                        list = [...list, restaurant]
+                    } else {
+                        console.log("restaurant.restaurantId included in excludList ", excludList)
+                    }
+           }
+        });
+    }
     return list
 }
 

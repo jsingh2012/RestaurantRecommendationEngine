@@ -42,6 +42,6 @@ app.get("/RestaurantRecommendations/", function(req, res) {
     console.log(req.query.userId, req.query.Restaurants);
     cost = getPrimaryAndSecondaryCategoryForUser(req.query.userId)
     cuisine = getPrimaryAndSecondaryCousineForUser(req.query.userId)
-    list1 = FeaturedRestaurantsForCuisineAndBracket(cuisine["primary"], cost["primary"])
+    list1 = FeaturedRestaurantsForCuisineAndBracket(cuisine, cost, [])
     res.send( JSON.stringify({"data": {Restaurants: list1, cost: cost, cuisine: cuisine }}))
 } ) 

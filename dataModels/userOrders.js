@@ -42,7 +42,7 @@ const getPrimaryAndSecondaryCousineForUser = (userId) => {
             //console.log(cousineheap)
         }
         result["primary"]  = cousineheap.pop()
-        result["seconary"] = [cousineheap.pop(), cousineheap.pop()]
+        result["secondary"] = [cousineheap.pop(), cousineheap.pop()]
         //console.log(result)
         return result
 
@@ -65,7 +65,7 @@ const getPrimaryAndSecondaryCategoryForUser = (userId) => {
             costBracketheap.push({costBracket: key, count: UsersOrders[userId].costBracket[key] })
         }
         result["primary"]  = costBracketheap.pop()
-        result["seconary"] = [costBracketheap.pop(), costBracketheap.pop()]
+        result["secondary"] = [costBracketheap.pop(), costBracketheap.pop()]
         //console.log(result)
         return result
 
