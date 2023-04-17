@@ -88,7 +88,7 @@ app.get("/RestaurantRecommendations/", function(req, res) {
         selectedListId = [...selectedListId, ...selectedListId2]
     }
 
-    list2, selectedListId2 = NewlyCreatedRestaurants(48, 4, selectedListId)
+    list2, selectedListId2 = NewlyCreatedRestaurants(48*3600, 4, selectedListId)
         console.log(list2, selectedListId2)
         list = [...list, ...list2]
         selectedListId = [...selectedListId, ...selectedListId2]
