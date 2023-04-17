@@ -39,7 +39,7 @@ cost and secondary cuisine, primary cost
 */
 
 const FeaturedRestaurantsForCuisineAndBracket = (userCuisine, costBracket, selectedListId) => {
-    console.log("FeaturedRestaurantsForCuisineAndBracket ", userCuisine, costBracket, selectedListId)
+    console.log("FeaturedRestaurantsForCuisineAndBracket INPUT ", userCuisine, costBracket, selectedListId)
     list = []
     if(typeof userCuisine === "undefined" || typeof userCuisine.cuisine === "undefined") {
         return [list , selectedListId]
@@ -75,6 +75,7 @@ const FeaturedRestaurantsForCuisineAndBracket = (userCuisine, costBracket, selec
            }
         });
     }
+    console.log("FeaturedRestaurantsForCuisineAndBracket END ", [list, selectedListId])
     return [list , selectedListId]
 }
 /*
@@ -85,7 +86,7 @@ All restaurants of secondary cuisine, primary cost bracket with rating >= 4.5
 */
 const RestaurantsForCuisineAndBracketWithMinRating = (userCuisine, costBracket, minRating, selectedListId) => {
     
-    console.log("RestaurantsForCuisineAndBracketWithMinRating ", userCuisine, costBracket, minRating, selectedListId)
+    console.log("RestaurantsForCuisineAndBracketWithMinRating INPUT ", userCuisine, costBracket, minRating, selectedListId)
     list = []
     if(typeof userCuisine === "undefined" || typeof userCuisine.cuisine === "undefined") {
         return [list , selectedListId]
@@ -103,15 +104,16 @@ const RestaurantsForCuisineAndBracketWithMinRating = (userCuisine, costBracket, 
             }
        }
     });
-    console.log("RestaurantsForCuisineAndBracketWithMinRating ", [list, selectedListId])
+    console.log("RestaurantsForCuisineAndBracketWithMinRating END ", [list, selectedListId])
    
     return [list, selectedListId]
 }
 
 const RestaurantsForCuisineAndBracketWithMaxRating = (userCuisine, costBracket, maxRating, selectedListId) => {
-    console.log("RestaurantsForCuisineAndBracketWithMaxRating ", userCuisine, costBracket, maxRating, selectedListId)
+    console.log("RestaurantsForCuisineAndBracketWithMaxRating INPUT ", userCuisine, costBracket, maxRating, selectedListId)
     list = []
     if(typeof userCuisine === "undefined" || typeof userCuisine.cuisine === "undefined") {
+        console.log("RestaurantsForCuisineAndBracketWithMaxRating r1 ",[list , selectedListId] )
         return [list , selectedListId]
     }
     Restaurants.forEach(restaurant => {
@@ -127,7 +129,7 @@ const RestaurantsForCuisineAndBracketWithMaxRating = (userCuisine, costBracket, 
             }
        }
     });
-    console.log("RestaurantsForCuisineAndBracketWithMinRating ", [list,selectedListId])
+    console.log("RestaurantsForCuisineAndBracketWithMinRating END ", [list,selectedListId])
    
     return [list, selectedListId]
 }
@@ -137,22 +139,29 @@ const NewlyCreatedRestaurants = (maxTime, top, selectedListId) => {
     Restaurantsheap = new Heap(function(a, b) {
         return b.rating - a.rating;
     })
+    lengthHeap = 0
     Restaurants.forEach(restaurant => {
+        console.log("NewlyCreatedRestaurants restaurant ", restaurant, selectedListId, restaurant.restaurantId )
         if(!selectedListId.includes( restaurant.restaurantId)) {
-            if(Date.now() - restaurant.onboardedTime < maxTime) {
-                console.log(Date.now() - restaurant.onboardedTime )
-                cousineheap.push({rating: restaurant.rating, restaurant: restaurant })
+            diff =  Math.floor(Date.now() / 1000) - restaurant.onboardedTime
+            console.log("diff ", diff, " maxTime ", maxTime)
+            if(diff < maxTime) {
+                Restaurantsheap.push({rating: restaurant.rating, restaurant: restaurant })
+                lengthHeap++
             }
         }
     });
     let count = top 
-    while(count && Restaurantsheap.length > 0) {
-        top = cousineheap.pop()
-        list == [...list,top.restaurant ]
-        selectedListId = [...selectedListId, restaurant.restaurantId]
+    console.log("Restaurantsheap", Restaurantsheap, count, lengthHeap)
+    while(count > 0 && lengthHeap > 0) {
+        top = Restaurantsheap.pop()
+        console.log("top ", top.restaurant.Restaurant, top.restaurant.restaurantId)
+        list = [...list,top.restaurant.Restaurant ]
+        selectedListId = [...selectedListId, top.restaurant.restaurantId]
         count--
+        lengthHeap--
     }
-    console.log("RestaurantsForCuisineAndBracketWithMinRating ", {list2 : list, selectedListId2:selectedListId})
+    console.log("NewlyCreatedRestaurants END ", [ list, selectedListId])
    
     return [list, selectedListId]
 }
@@ -161,12 +170,12 @@ const ALLRestaurants = ( selectedListId) => {
     console.log("ALLRestaurants Input ",  selectedListId)
     list = []
     Restaurants.forEach(restaurant => { 
-        if(!selectedListId.includes( restaurant.restaurantId)) {
+        if(!selectedListId.includes(restaurant.restaurantId)) {
             list = [...list, restaurant]
             selectedListId = [...selectedListId, restaurant.restaurantId]
         } 
     });
-    console.log("ALLRestaurants ", {list2 : list, selectedListId2:selectedListId})
+    console.log("ALLRestaurants END ", [list, selectedListId])
    
     return [list,selectedListId]
 }
