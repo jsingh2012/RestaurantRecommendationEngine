@@ -62,7 +62,6 @@ app.get("/RestaurantRecommendations/", function(req, res) {
    
 
     //MINRATING 
-   
     console.log("RestaurantsForCuisineAndBracketWithMinRating", cuisine, cost)  
     let [list3, selectedListId3] = [[], []]
     if(cost["secondary"] && cost["secondary"][0])  {
@@ -113,50 +112,45 @@ app.get("/RestaurantRecommendations/", function(req, res) {
     console.log("NewlyCreatedRestaurants updated selectedListId ",  selectedListId)
 
     //MAX RATING
-    selectedListId2 = []
-    list2 = []
-    [list2, selectedListId2] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["primary"], cost["primary"], 4.0, selectedListId)
-    console.log("RestaurantsForCuisineAndBracketWithMaxRating", list2, selectedListId2)
-    list = [...list, ...list2]
+    let [list8, selectedListId8] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["primary"], cost["primary"], 4.0, selectedListId)
+    console.log("RestaurantsForCuisineAndBracketWithMaxRating", list8, selectedListId8)
+    recos["MAXRatingPrimaryCuisinePrimaryCost"] = list8
+    selectedListId = [...selectedListId, ...selectedListId8]
+
+    let [list9, selectedListId9] = [[], []]
     if(cost["secondary"] && cost["secondary"][0]) {
-        list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["primary"], cost["secondary"][0], 4.5, selectedListId)
-        console.log(list2, selectedListId2)
-        list = [...list, ...list2]
-        selectedListId = [...selectedListId, ...selectedListId2]
+        [list9, selectedListId9] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["primary"], cost["secondary"][0], 4.5, selectedListId)
     }
+    recos["MAXRatingPrimaryCuisineSecondaryCost0"] = list9
+    selectedListId = [...selectedListId, ...selectedListId9]
 
     //MAX RATING
+    let [list10, selectedListId10] = [[], []]
     if(cost["secondary"] && cost["secondary"][1])  {
-        selectedListId2 = []
-        list2 = []
-        [list2, selectedListId2] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["primary"], cost["secondary"][1], 4.5, selectedListId)
-        console.log(list2, selectedListId2)
-        list = [...list, ...list2]
-        selectedListId = [...selectedListId, ...selectedListId2]
+        [list10, selectedListId10] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["primary"], cost["secondary"][1], 4.5, selectedListId)
     }
+    recos["MAXRatingPrimaryCuisineSecondaryCost1"] = list10
+    selectedListId = [...selectedListId, ...selectedListId10]
+
     //MAX RATING
+    let [list11, selectedListId11] = [[], []]
     if(cuisine["secondary"] && cuisine["secondary"][0]) {
-        selectedListId2 = []
-        list2 = []
-        [list2, selectedListId2] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["secondary"][0], cost["primary"], 4.5, selectedListId)
-        console.log(list2, selectedListId2)
-        list = [...list, ...list2]
-        selectedListId = [...selectedListId, ...selectedListId2]
+        [list11, selectedListId11] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["secondary"][0], cost["primary"], 4.5, selectedListId)
     }
+    recos["MAXRatingSecondaryCuisine0PrimaryCost"] = list11
+    selectedListId = [...selectedListId, ...selectedListId11]
+
     //MAX RATING
+    let [list12, selectedListId12] = [[], []]
     if(cuisine["secondary"] && cuisine["secondary"][1]) {
-        selectedListId2 = []
-        list2 = []
-        [list2] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["secondary"][1], cost["primary"], 4.5, selectedListId)
-        console.log(list2[0])
-        list = [...list, ...list2]
-        selectedListId = [...selectedListId, ...selectedListId2]
+        [list12, selectedListId12] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["secondary"][1], cost["primary"], 4.5, selectedListId)
     }
-    
-    [list2, selectedListId2] = ALLRestaurants(selectedListId)
-    console.log("ALLRestaurants LISTS selectedListId2 ",selectedListId2, " list2 ", list2)
-    recos["ALLRestaurants"] = list2
-    selectedListId = [...selectedListId, ...selectedListId2]
+    recos["MAXRatingSecondaryCuisine1PrimaryCost"] = list11
+    selectedListId = [...selectedListId, ...selectedListId12]
+
+    let [list13, selectedListId13] = ALLRestaurants(selectedListId)
+    recos["ALLRestaurants"] = list13
+    selectedListId = [...selectedListId, ...selectedListId13]
 
 
     console.log("selectedListId ", selectedListId, "list ", list)
