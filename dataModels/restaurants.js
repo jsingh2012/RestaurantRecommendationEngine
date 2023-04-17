@@ -155,8 +155,8 @@ const NewlyCreatedRestaurants = (maxTime, top, selectedListId) => {
     console.log("Restaurantsheap", Restaurantsheap, count, lengthHeap)
     while(count > 0 && lengthHeap > 0) {
         top = Restaurantsheap.pop()
-        console.log("top ", top.restaurant.Restaurant, top.restaurant.restaurantId)
-        list = [...list,top.restaurant.Restaurant ]
+        console.log("top ", top.restaurant, top.restaurant.restaurantId)
+        list = [...list, top.restaurant ]
         selectedListId = [...selectedListId, top.restaurant.restaurantId]
         count--
         lengthHeap--
