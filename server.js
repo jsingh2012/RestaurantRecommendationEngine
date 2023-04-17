@@ -52,12 +52,13 @@ app.get("/RestaurantRecommendations/", function(req, res) {
     list = [...list, ...list2]
     selectedListId = [...selectedListId, ...selectedListId2]
 
-
+    //MINRATING 
     [list2, selectedListId2] = RestaurantsForCuisineAndBracketWithMinRating(cuisine["primary"], cost["primary"], 4.0, selectedListId)
     console.log("RestaurantsForCuisineAndBracketWithMinRating :", list2, selectedListId2)
     list = [...list, ...list2]
     selectedListId = [...selectedListId, ...selectedListId2]
 
+    //MINRATING 
     if(cost["secondary"] && cost["secondary"][0]) {
         list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMinRating(cuisine["primary"], cost["secondary"][0], 4.5, selectedListId)
         console.log(list2, selectedListId2)
@@ -65,19 +66,21 @@ app.get("/RestaurantRecommendations/", function(req, res) {
         selectedListId = [...selectedListId, ...selectedListId2]
     }
 
+    //MINRATING 
     if(cost["secondary"] && cost["secondary"][1])  {
         list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMinRating(cuisine["primary"], cost["secondary"][1], 4.5, selectedListId)
         console.log(list2, selectedListId2)
         list = [...list, ...list2]
         selectedListId = [...selectedListId, ...selectedListId2]
     }
+    //MINRATING 
     if(cuisine["secondary"] && cuisine["secondary"][0]) {
         list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMinRating(cuisine["secondary"][0], cost["primary"], 4.5, selectedListId)
         console.log(list2, selectedListId2)
         list = [...list, ...list2]
         selectedListId = [...selectedListId, ...selectedListId2]
     }
-
+    //MINRATING 
     if(cuisine["secondary"] && cuisine["secondary"][1]) {
         list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMinRating(cuisine["secondary"][1], cost["primary"], 4.5, selectedListId)
         console.log(list2, selectedListId2)
@@ -85,9 +88,13 @@ app.get("/RestaurantRecommendations/", function(req, res) {
         selectedListId = [...selectedListId, ...selectedListId2]
     }
 
+    list2, selectedListId2 = NewlyCreatedRestaurants(48, 4, selectedListId)
+        console.log(list2, selectedListId2)
+        list = [...list, ...list2]
+        selectedListId = [...selectedListId, ...selectedListId2]
 
 
-
+    //MAX RATING
     list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["primary"], cost["primary"], 4.0, selectedListId)
     console.log(list2, selectedListId2)
     list = [...list, ...list2]
@@ -98,19 +105,21 @@ app.get("/RestaurantRecommendations/", function(req, res) {
         selectedListId = [...selectedListId, ...selectedListId2]
     }
 
+    //MAX RATING
     if(cost["secondary"] && cost["secondary"][1])  {
         list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["primary"], cost["secondary"][1], 4.5, selectedListId)
         console.log(list2, selectedListId2)
         list = [...list, ...list2]
         selectedListId = [...selectedListId, ...selectedListId2]
     }
+    //MAX RATING
     if(cuisine["secondary"] && cuisine["secondary"][0]) {
         list2, selectedListId2 = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["secondary"][0], cost["primary"], 4.5, selectedListId)
         console.log(list2, selectedListId2)
         list = [...list, ...list2]
         selectedListId = [...selectedListId, ...selectedListId2]
     }
-
+    //MAX RATING
     if(cuisine["secondary"] && cuisine["secondary"][1]) {
         [list2, selectedListId2] = RestaurantsForCuisineAndBracketWithMaxRating(cuisine["secondary"][1], cost["primary"], 4.5, selectedListId)
         console.log(list2, selectedListId2)

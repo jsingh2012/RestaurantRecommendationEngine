@@ -1,3 +1,4 @@
+var Heap = require('heap');
 class Restaurant {
     constructor(restaurantId, name, cuisine, costBracket, rating, isRecommended, onboardedTime) {
       this.restaurantId = restaurantId;
@@ -19,11 +20,14 @@ const getRestaurants = (req, res) => {
 const postRestaurants =  (req, res) => {
     //console.log(req.body);
     //req.body.id = length(Restaurant)+1
+    console.log(Date.now()) 
     const {name, cuisine, costBracket, rating, isRecommended, onboardedTime } =  req.body
     const restaurantId = Restaurants.length+1
-    console.log(restaurantId, name, cuisine, costBracket, rating, isRecommended, onboardedTime)
+    const serverTime = Math.floor(Date.now() / 1000)
+    
+    console.log(restaurantId, name, cuisine, costBracket, rating, isRecommended, onboardedTime, serverTime)
 
-    newRestaurant = new Restaurant(restaurantId, name,  cuisine, costBracket, rating, isRecommended, onboardedTime)
+    newRestaurant = new Restaurant(restaurantId, name,  cuisine, costBracket, rating, isRecommended, onboardedTime ? onboardedTime:serverTime)
     Restaurants = [...Restaurants, newRestaurant]
     
     res.send( JSON.stringify(Restaurants))
@@ -37,6 +41,10 @@ cost and secondary cuisine, primary cost
 const FeaturedRestaurantsForCuisineAndBracket = (userCuisine, costBracket, selectedListId) => {
     console.log("FeaturedRestaurantsForCuisineAndBracket ", userCuisine, costBracket, selectedListId)
     list = []
+    if(typeof userCuisine === "undefined" || typeof userCuisine.cuisine === "undefined") {
+        return [list , selectedListId]
+    }
+    
     Restaurants.forEach(restaurant => {
         console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)  
         if(restaurant.isRecommended && restaurant.cuisine === userCuisine["primary"].cuisine 
@@ -76,8 +84,12 @@ All restaurants of secondary cuisine, primary cost bracket with rating >= 4.5
 
 */
 const RestaurantsForCuisineAndBracketWithMinRating = (userCuisine, costBracket, minRating, selectedListId) => {
+    
     console.log("RestaurantsForCuisineAndBracketWithMinRating ", userCuisine, costBracket, minRating, selectedListId)
     list = []
+    if(typeof userCuisine === "undefined" || typeof userCuisine.cuisine === "undefined") {
+        return [list , selectedListId]
+    }
     Restaurants.forEach(restaurant => {
         console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)  
         if( restaurant.cuisine === userCuisine.cuisine 
@@ -99,6 +111,9 @@ const RestaurantsForCuisineAndBracketWithMinRating = (userCuisine, costBracket, 
 const RestaurantsForCuisineAndBracketWithMaxRating = (userCuisine, costBracket, maxRating, selectedListId) => {
     console.log("RestaurantsForCuisineAndBracketWithMaxRating ", userCuisine, costBracket, maxRating, selectedListId)
     list = []
+    if(typeof userCuisine === "undefined" || typeof userCuisine.cuisine === "undefined") {
+        return [list , selectedListId]
+    }
     Restaurants.forEach(restaurant => {
         console.log(" restaurant ", restaurant, userCuisine.cuisine, costBracket.costBracket, restaurant.cuisine, restaurant.costBracket)  
         if( restaurant.cuisine === userCuisine.cuisine 
@@ -117,17 +132,29 @@ const RestaurantsForCuisineAndBracketWithMaxRating = (userCuisine, costBracket, 
     return [list, selectedListId]
 }
 
-const NewlyCreatedRestaurants = (userCuisine, costBracket, minRating, selectedListId) => {
+const NewlyCreatedRestaurants = (maxTime, top, selectedListId) => {
     list = []
+    Restaurantsheap = new Heap(function(a, b) {
+        return b.rating - a.rating;
+    })
     Restaurants.forEach(restaurant => {
         if(!selectedListId.includes( restaurant.restaurantId)) {
-            list = [...list, restaurant]
-            selectedListId = [...selectedListId, restaurant.restaurantId]
+            if(Date.now() - restaurant.onboardedTime < maxTime) {
+                console.log(Date.now() - restaurant.onboardedTime )
+                cousineheap.push({rating: restaurant.rating, restaurant: restaurant })
+            }
         }
     });
+    let count = top 
+    while(count && Restaurantsheap.length > 0) {
+        top = cousineheap.pop()
+        list == [...list,top.restaurant ]
+        selectedListId = [...selectedListId, restaurant.restaurantId]
+        count--
+    }
     console.log("RestaurantsForCuisineAndBracketWithMinRating ", {list2 : list, selectedListId2:selectedListId})
    
-    return {list2 : list, selectedListId2: selectedListId}
+    return [list, selectedListId]
 }
 
 const ALLRestaurants = ( selectedListId) => {
